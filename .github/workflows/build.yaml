@@ -57,8 +57,8 @@ jobs:
         type: [ deb, rpm ]
         wayland: [ true, false ]
         include:
-          - os: Linux
-          - arch: x86_64
+          - { os: Linux,   arch: x86_64 }
+          - { os: Linux,   arch: aarch64 }
     steps:
       - name: Checkout MiniLPA
         uses: actions/checkout@v4
