@@ -49,7 +49,7 @@ jobs:
           path: |
             build/dist/
   build-with-jbr:
-    name: ${{ matrix.os }}(${{ matrix.type }}) ${{ matrix.arch }} ${{ matrix.wayland }} with JetBrains Runtime
+    name: ${{ matrix.os }}(${{ matrix.type }}) ${{ matrix.arch }} ${{ matrix.wayland && 'Wayland' || '' }} with JetBrains Runtime
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -94,7 +94,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MiniLPA-${{ env.SHORT_COMMIT_ID }}-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.type }}${{ matrix.wayland }}
+          name: MiniLPA-${{ env.SHORT_COMMIT_ID }}-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.type }}${{ matrix.wayland && '-Wayland' || '' }}
           path: |
             build/dist/
   release:
