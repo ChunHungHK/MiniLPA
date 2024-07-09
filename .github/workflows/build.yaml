@@ -15,10 +15,10 @@ jobs:
       matrix:
         include:
           - { label: windows-latest, os: Windows, arch: x86_64,  type: msi }
-          - { label: macos-13,       os: macOS,   arch: x86_64,  type: dmg }
-          - { label: macos-13,       os: macOS,   arch: x86_64,  type: pkg }
-          - { label: macos-latest,   os: macOS,   arch: aarch64, type: dmg }
-          - { label: macos-latest,   os: macOS,   arch: aarch64, type: pkg }
+          ##- { label: macos-13,       os: macOS,   arch: x86_64,  type: dmg }
+          ##- { label: macos-13,       os: macOS,   arch: x86_64,  type: pkg }
+          ##- { label: macos-latest,   os: macOS,   arch: aarch64, type: dmg }
+          ##- { label: macos-latest,   os: macOS,   arch: aarch64, type: pkg }
     steps:
       - name: Checkout MiniLPA
         uses: actions/checkout@v4
@@ -55,14 +55,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: Linux,   arch: x86_64,  type: deb,  wayland: true }
-          - { os: Linux,   arch: x86_64,  type: deb,  wayland: false }
-          - { os: Linux,   arch: x86_64,  type: rpm,  wayland: true }
-          - { os: Linux,   arch: x86_64,  type: rpm,  wayland: false }
           - { os: Linux,   arch: aarch64, type: deb,  wayland: true }
           - { os: Linux,   arch: aarch64, type: deb,  wayland: false }
           - { os: Linux,   arch: aarch64, type: rpm,  wayland: true }
           - { os: Linux,   arch: aarch64, type: rpm,  wayland: false }
+          - { os: Linux,   arch: x86_64,  type: deb,  wayland: true }
+          - { os: Linux,   arch: x86_64,  type: deb,  wayland: false }
+          - { os: Linux,   arch: x86_64,  type: rpm,  wayland: true }
+          - { os: Linux,   arch: x86_64,  type: rpm,  wayland: false }
           
     steps:
       - name: Checkout MiniLPA
