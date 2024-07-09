@@ -59,10 +59,10 @@ jobs:
           - { os: Linux,   arch: aarch64, type: deb,  wayland: false }
           - { os: Linux,   arch: aarch64, type: rpm,  wayland: true }
           - { os: Linux,   arch: aarch64, type: rpm,  wayland: false }
-          - { os: Linux,   arch: x86_64,  type: deb,  wayland: true }
-          - { os: Linux,   arch: x86_64,  type: deb,  wayland: false }
-          - { os: Linux,   arch: x86_64,  type: rpm,  wayland: true }
-          - { os: Linux,   arch: x86_64,  type: rpm,  wayland: false }
+          ##- { os: Linux,   arch: x86_64,  type: deb,  wayland: true }
+          ##- { os: Linux,   arch: x86_64,  type: deb,  wayland: false }
+          ##- { os: Linux,   arch: x86_64,  type: rpm,  wayland: true }
+          ##- { os: Linux,   arch: x86_64,  type: rpm,  wayland: false }
           
     steps:
       - name: Checkout MiniLPA
