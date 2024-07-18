@@ -19,8 +19,6 @@ jobs:
           ##- { label: macos-13,       os: macOS,   arch: x86_64,  type: pkg }
           ##- { label: macos-latest,   os: macOS,   arch: aarch64, type: dmg }
           ##- { label: macos-latest,   os: macOS,   arch: aarch64, type: pkg }
-          - { label: macos-latest,   os: Linux,   arch: aarch64, type: deb }
-          - { label: macos-latest,   os: Linux,   arch: aarch64, type: rpm }
           
     steps:
       - name: Checkout MiniLPA
