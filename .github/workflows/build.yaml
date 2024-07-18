@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          ##- { label: windows-latest, os: Windows, arch: x86_64,  type: msi }
+          - { label: windows-latest, os: Windows, arch: x86_64,  type: msi }
           ##- { label: macos-13,       os: macOS,   arch: x86_64,  type: dmg }
           ##- { label: macos-13,       os: macOS,   arch: x86_64,  type: pkg }
           ##- { label: macos-latest,   os: macOS,   arch: aarch64, type: dmg }
