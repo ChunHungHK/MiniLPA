@@ -1,0 +1,90 @@
+name: Build ARM64
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    tags: [ v* ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build-with-jbr:
+    name: ${{ matrix.os }}(${{ matrix.type }}) ${{ matrix.arch }} ${{ matrix.wayland && 'Wayland' || '' }} with JetBrains Runtime
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: Linux,   arch: aarch64, type: deb,  wayland: true }
+          - { os: Linux,   arch: aarch64, type: deb,  wayland: false }
+          - { os: Linux,   arch: aarch64, type: rpm,  wayland: true }
+          - { os: Linux,   arch: aarch64, type: rpm,  wayland: false }
+          ##- { os: Linux,   arch: x86_64,  type: deb,  wayland: true }
+          ##- { os: Linux,   arch: x86_64,  type: deb,  wayland: false }
+          ##- { os: Linux,   arch: x86_64,  type: rpm,  wayland: true }
+          ##- { os: Linux,   arch: x86_64,  type: rpm,  wayland: false }
+          
+    steps:
+      - name: Checkout MiniLPA
+        uses: actions/checkout@v4
+
+      - name: Checkout JetBrains Setup
+        uses: actions/checkout@v4
+        with:
+          repository: ShiinaSekiu/github-actions-jbr-setup
+          ref: jdk
+          path: .github/shared_actions/jbr
+
+      - name: Install JetBrains Runtime
+        uses: ./.github/shared_actions/jbr/setup_jbr21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build Native Executable
+        shell: pwsh
+        run: |
+          ./scripts/Build.ps1 -NativeExecutable -NativeExecutableType ${{ matrix.type }} -NativeWayland:$${{ matrix.wayland }} -GithubToken ${{ secrets.GH_TOKEN }}
+
+      - name: Get Short Commit Id
+        shell: pwsh
+        run: |
+          "SHORT_COMMIT_ID=$($Env:GITHUB_SHA.Substring(0, 7))" | Out-File -FilePath $Env:GITHUB_ENV -Append
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MiniLPA-${{ env.SHORT_COMMIT_ID }}-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.type }}${{ matrix.wayland && '-Wayland' || '' }}
+          path: |
+            build/dist/
+  release:
+    name: Release
+    runs-on: macos-latest
+    needs: [ build-with-jbr ]
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+
+      - name: Get Artifact SHA256
+        id: artifact-hash
+        shell: pwsh
+        run: |
+          'sha256<<EOF' | Out-File -Path $Env:GITHUB_OUTPUT -Append
+          Get-ChildItem | ForEach-Object { (Get-FileHash $_.FullName -Algorithm SHA256).Hash + ' ' + $_.Name | Out-File -Path $Env:GITHUB_OUTPUT -Append }
+          'EOF' | Out-File -Path $Env:GITHUB_OUTPUT -Append
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          append_body: true
+          body: |
+            ## Artifacts SHA256 Hashes
+            ```
+            ${{ steps.artifact-hash.outputs.sha256 }}
+            ```
+          files: '*'
