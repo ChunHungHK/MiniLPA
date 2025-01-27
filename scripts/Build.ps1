@@ -1,3 +1,4 @@
+##force rename for arm64
 #!/usr/bin/env pwsh
 param(
     [ValidateSet('all', 'macos_universal', 'windows_x86', 'windows_aarch64', 'linux_x86')]
@@ -84,7 +85,7 @@ if ($NativeExecutable)
     else { throw 'unknown os' }
 
     $OSArchitecture = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture
-    $Arch = if ($OSArchitecture -eq 'X64') { 'x86_64' }
+    $Arch = if ($OSArchitecture -eq 'Arm64') { 'aarch64' }
     elseif ($OSArchitecture -eq 'Arm64') { 'aarch64' }
     else { throw 'unkown arch' }
 
